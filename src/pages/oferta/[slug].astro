@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import { config } from '../../config';
+import { services } from '../../data/services';
+import { createServiceStructuredData, createBreadcrumbStructuredData } from '../../lib/structuredData';
+import { imageDimensions } from '../../lib/imageDimensions';
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+const { service } = Astro.props;
+const canonical = `${config.siteUrl}/oferta/${service.slug}`;
+const title = `${service.name} — ${config.siteName}`;
+const imageDims = service.image ? await imageDimensions(service.image) : null;
+
+const jsonLd = [
+  createServiceStructuredData({ name: service.name, description: service.shortDescription, url: canonical, image: service.image }),
+  createBreadcrumbStructuredData([
+    { name: 'Strona główna', url: config.siteUrl },
+    { name: 'Oferta', url: `${config.siteUrl}/oferta` },
+    { name: service.name, url: canonical },
+  ]),
+];
+---
+
+<Layout
+  title={title}
+  description={service.shortDescription}
+  canonical={canonical}
+  ogImage={service.image ? `${config.siteUrl}${service.image}` : undefined}
+  ogImageAlt={service.name}
+  ogImageWidth={imageDims?.width}
+  ogImageHeight={imageDims?.height}
+  jsonLd={jsonLd}
+>
+  <div class="relative w-full h-[280px] sm:h-[360px] overflow-hidden bg-neutral-900">
+    {service.image && (
+      <img
+        src={service.image}
+        alt={service.name}
+        width={imageDims?.width}
+        height={imageDims?.height}
+        class="absolute inset-0 w-full h-full object-cover object-center"
+      />
+    )}
+    <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-black/10"></div>
+    <div class="absolute bottom-0 left-0 right-0 px-4 pb-8 sm:px-6">
+      <div class="max-w-4xl mx-auto">
+        <p class="text-xs font-semibold text-orange-400 uppercase tracking-widest mb-2">Oferta</p>
+        <h1 class="text-3xl sm:text-4xl font-bold text-white leading-tight">{service.name}</h1>
+      </div>
+    </div>
+  </div>
+
+  <section class="bg-white py-14 lg:py-20">
+    <div class="max-w-4xl mx-auto px-4 lg:px-6">
+      <div class="grid lg:grid-cols-[3fr_2fr] gap-12 items-start">
+        <div class="flex flex-col gap-4">
+          {service.description.map((p) => <p class="text-neutral-600 leading-relaxed">{p}</p>)}
+        </div>
+
+        <div class="border border-neutral-200 rounded-2xl p-6">
+          <p class="text-xs font-semibold text-orange-600 uppercase tracking-widest mb-4">Co obejmuje</p>
+          <ul class="flex flex-col gap-3 mb-6">
+            {service.highlights.map((h) => (
+              <li class="flex gap-2.5 text-sm text-neutral-700">
+                <Icon name="lucide:check" class="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+          <a href="/kontakt" class="inline-flex w-full items-center justify-center bg-orange-600 hover:bg-orange-700 transition-colors text-white font-semibold px-5 py-3 rounded-lg text-sm">
+            Zapytaj o wycenę
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { config } from '../config';
+import { createBreadcrumbStructuredData } from '../lib/structuredData';
+
+const title = `Polityka prywatności – ${config.siteName}`;
+const description = `Polityka prywatności ${config.legalName}. Zasady przetwarzania i ochrony danych osobowych.`;
+const canonical = `${config.siteUrl}/polityka-prywatnosci`;
+
+const jsonLd = [
+  createBreadcrumbStructuredData([
+    { name: 'Strona główna', url: config.siteUrl },
+    { name: 'Polityka prywatności', url: canonical },
+  ]),
+];
+---
+
+<Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
+  <div class="bg-white">
+    <div class="max-w-3xl mx-auto px-4 lg:px-6 py-16 sm:py-24">
+      <header class="mb-10">
+        <h1 class="text-4xl font-bold text-neutral-900 mb-1">Polityka Prywatności</h1>
+        <p class="text-neutral-500 font-medium">{config.legalName}</p>
+      </header>
+
+      <!--
+        This is placeholder legal text, not legal advice - have a real
+        privacy policy drafted or reviewed for your actual jurisdiction and
+        what data your site/form/analytics actually collect before you
+        launch.
+      -->
+      <div class="space-y-8 text-neutral-700 leading-relaxed">
+        <section>
+          <h2 class="text-xl font-semibold text-neutral-900 mb-3">1. Postanowienia ogólne</h2>
+          <p class="mb-3">
+            Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych użytkowników
+            serwisu internetowego {config.siteUrl} (dalej: „Serwis").
+          </p>
+          <p>
+            Administratorem danych osobowych jest {config.legalName}, {config.address.street}, {config.address.postalCode}{' '}
+            {config.address.city}, e-mail: {config.contact.email}, tel.: {config.contact.phone}, NIP: {config.legal.nip}
+            (dalej: „Administrator").
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-neutral-900 mb-3">2. Zakres i cel przetwarzania danych</h2>
+          <p class="mb-3">Dane osobowe przekazane przez formularz kontaktowy przetwarzane są wyłącznie w celu udzielenia odpowiedzi na zapytanie (art. 6 ust. 1 lit. f RODO).</p>
+          <p>Dane przetwarzane są przez okres niezbędny do realizacji tego celu, a następnie usuwane.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-neutral-900 mb-3">3. Prawa użytkowników</h2>
+          <p class="mb-3">Użytkownik ma prawo do dostępu, sprostowania, usunięcia i przenoszenia swoich danych, a także do wniesienia sprzeciwu wobec ich przetwarzania.</p>
+          <p>
+            Żądania dotyczące realizacji praw należy kierować na adres e-mail:
+            <a href={`mailto:${config.contact.email}`} class="text-orange-700 hover:underline">{config.contact.email}</a>.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-neutral-900 mb-3">4. Pliki cookies i analityka</h2>
+          <p>
+            Serwis może korzystać z narzędzi analitycznych (np. Cloudflare Web Analytics) w celu anonimowego pomiaru
+            ruchu. Użytkownik może zarządzać ustawieniami cookies w swojej przeglądarce.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-neutral-900 mb-3">5. Kontakt</h2>
+          <p>
+            W razie pytań dotyczących przetwarzania danych osobowych skontaktuj się z nami pod adresem:
+            <a href={`mailto:${config.contact.email}`} class="text-orange-700 hover:underline">{config.contact.email}</a>.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</Layout>

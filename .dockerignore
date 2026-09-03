@@ -1,0 +1,14 @@
+/dist
+/node_modules
+npm-debug.log
+
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+.DS_Store
+Thumbs.db
+
+Dockerfile
+.dockerignore
+.git

@@ -1,0 +1,17 @@
+.idea
+node_modules
+
+.env
+
+dist
+.astro
+*.log
+
+.eslintcache
+
+.DS_Store
+
+.vscode
+!.vscode/extensions.json
+
+.tsbuildinfo

@@ -1,0 +1,100 @@
+---
+import { Icon } from 'astro-icon/components';
+import { config } from '../config';
+
+const offerLinks = [
+  { name: 'O nas', href: '/o-nas' },
+  { name: 'Oferta', href: '/oferta' },
+  { name: 'Kontakt', href: '/kontakt' },
+];
+
+const infoLinks = [{ name: 'Polityka prywatności', href: '/polityka-prywatnosci' }];
+
+type SocialLink = { icon: string; href: string; label: string };
+const socials: SocialLink[] = (
+  [
+    config.social.facebook && { icon: 'simple-icons:facebook', href: config.social.facebook, label: 'Facebook' },
+    config.social.instagram && { icon: 'simple-icons:instagram', href: config.social.instagram, label: 'Instagram' },
+    config.social.linkedin && { icon: 'simple-icons:linkedin', href: config.social.linkedin, label: 'LinkedIn' },
+  ] as (SocialLink | false)[]
+).filter((s): s is SocialLink => Boolean(s));
+
+// Baked in at build time - fine for a static site with no client-side
+// re-render of this markup to mismatch against; it just won't update
+// between deploys, so a stale year after Jan 1st just means "redeploy".
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-neutral-950 text-white">
+  <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
+      <div class="md:col-span-2 lg:col-span-1 lg:pr-6">
+        <p class="font-bold text-xl mb-4">{config.siteName}</p>
+        <p class="text-sm text-neutral-400 leading-relaxed mb-5">{config.tagline}</p>
+        {
+          socials.length > 0 && (
+            <div class="flex items-center gap-2">
+              {socials.map(({ icon, href, label }) => (
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  class="w-9 h-9 rounded-full bg-neutral-800 hover:bg-orange-600 flex items-center justify-center transition-colors"
+                >
+                  <Icon name={icon} class="w-3.5 h-3.5 text-white" />
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      <div>
+        <p class="text-sm font-bold text-white mb-4">Firma</p>
+        <ul class="space-y-2.5">
+          {offerLinks.map((l) => <li><a href={l.href} class="text-sm text-neutral-400 hover:text-white transition-colors">{l.name}</a></li>)}
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-sm font-bold text-white mb-4">Informacje prawne</p>
+        <ul class="space-y-2.5">
+          {infoLinks.map((l) => <li><a href={l.href} class="text-sm text-neutral-400 hover:text-white transition-colors">{l.name}</a></li>)}
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-sm font-bold text-white mb-4">Kontakt</p>
+        <ul class="space-y-3">
+          <li>
+            <a href={`mailto:${config.contact.email}`} class="flex items-center gap-3 group">
+              <Icon name="lucide:mail" class="w-4 h-4 text-orange-500 shrink-0" />
+              <span class="text-sm text-white group-hover:text-orange-400 transition-colors">{config.contact.email}</span>
+            </a>
+          </li>
+          <li>
+            <a href={config.contact.phoneHref} class="flex items-center gap-3 group">
+              <Icon name="lucide:phone" class="w-4 h-4 text-orange-500 shrink-0" />
+              <span class="text-sm text-white group-hover:text-orange-400 transition-colors">{config.contact.phone}</span>
+            </a>
+          </li>
+          <li>
+            <a href={config.address.mapsUrl} target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 group">
+              <Icon name="lucide:map-pin" class="w-4 h-4 text-orange-500 shrink-0" />
+              <span class="text-sm text-white group-hover:text-orange-400 transition-colors">
+                {config.address.city}, {config.address.street}
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-neutral-800">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p class="text-xs text-neutral-500">© {currentYear} {config.legalName}. Wszelkie prawa zastrzeżone.</p>
+    </div>
+  </div>
+</footer>

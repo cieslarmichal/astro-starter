@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Strona nie odnaleziona" description="Strona, której szukasz, nie istnieje lub została przeniesiona." noindex nofollow>
+  <div class="min-h-[calc(100vh-4.5rem)] bg-neutral-950 flex flex-col items-center justify-center px-6 text-center">
+    <p class="text-sm font-bold uppercase tracking-[0.3em] text-orange-500 mb-4">Błąd 404</p>
+    <h1 class="text-6xl sm:text-8xl font-extrabold text-white mb-4 leading-none">Strona nieodnaleziona</h1>
+    <p class="text-base sm:text-lg text-neutral-400 max-w-md mb-10 leading-relaxed">
+      Sprawdź adres albo wróć do strony głównej.
+    </p>
+    <a href="/" class="px-6 py-3 rounded-full border border-neutral-600 hover:border-neutral-400 text-neutral-300 hover:text-white font-semibold text-sm transition-colors">
+      Wróć na główną
+    </a>
+  </div>
+</Layout>

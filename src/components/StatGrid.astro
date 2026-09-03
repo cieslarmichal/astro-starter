@@ -1,0 +1,48 @@
+---
+export type Stat = { value: string; label: string; desc: string };
+
+type Theme = 'dark' | 'light';
+
+const themes = {
+  dark: {
+    section: 'bg-neutral-950',
+    accent: 'text-orange-500',
+    label: 'text-white',
+    desc: 'text-neutral-400',
+    divide: 'divide-neutral-800',
+  },
+  light: {
+    section: 'bg-neutral-50 border-y border-neutral-200',
+    accent: 'text-orange-600',
+    label: 'text-neutral-900',
+    desc: 'text-neutral-500',
+    divide: 'divide-neutral-200',
+  },
+} satisfies Record<Theme, Record<string, string>>;
+
+interface Props {
+  theme: Theme;
+  eyebrow: string;
+  stats: Stat[];
+}
+
+const { theme, eyebrow, stats } = Astro.props;
+const t = themes[theme];
+---
+
+<section class={`py-14 lg:py-20 ${t.section}`}>
+  <div class="max-w-6xl mx-auto px-4 lg:px-6">
+    <p class={`text-sm font-semibold uppercase tracking-widest mb-6 ${t.accent}`}>{eyebrow}</p>
+    <div class={`grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x ${t.divide}`}>
+      {
+        stats.map(({ value, label, desc }) => (
+          <div class="flex flex-col py-5 first:pt-0 last:pb-0 sm:py-0 sm:px-8 sm:first:pl-0 sm:last:pr-0">
+            <p class={`text-5xl lg:text-6xl font-black leading-none mb-2 ${t.accent}`}>{value}</p>
+            <p class={`text-base font-bold mb-1 ${t.label}`}>{label}</p>
+            <p class={`text-sm leading-relaxed ${t.desc}`}>{desc}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

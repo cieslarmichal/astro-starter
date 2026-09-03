@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StatGrid, { type Stat } from '../components/StatGrid.astro';
+import { Icon } from 'astro-icon/components';
+import { config } from '../config';
+import { services } from '../data/services';
+import { testimonials } from '../data/testimonials';
+import {
+  createWebSiteStructuredData,
+  createOrganizationStructuredData,
+  createWebPageStructuredData,
+  createLocalBusinessStructuredData,
+} from '../lib/structuredData';
+import { imageDimensions } from '../lib/imageDimensions';
+
+const title = `${config.siteName} — ${config.tagline}`;
+const description = `${config.siteName} to zespół, który pomaga firmom w ${config.address.city} zrealizować to, co dla nich najważniejsze. Poznaj naszą ofertę.`;
+
+const jsonLd = [
+  createWebPageStructuredData({ url: `${config.siteUrl}/`, name: title, description }),
+  createOrganizationStructuredData(),
+  createLocalBusinessStructuredData(),
+  createWebSiteStructuredData(),
+];
+
+const heroDims = await imageDimensions('/hero.webp');
+
+const stats: Stat[] = [
+  { value: '120+', label: 'Zrealizowanych projektów', desc: 'dla klientów różnej wielkości' },
+  { value: '8', label: 'Lat na rynku', desc: 'i wciąż rosnący zespół' },
+  { value: '98%', label: 'Klientów poleca nas dalej', desc: 'na podstawie ankiet posprzedażowych' },
+];
+---
+
+<Layout title={title} description={description} canonical={`${config.siteUrl}/`} jsonLd={jsonLd}>
+  <!-- ── HERO ─────────────────────────────────────────────── -->
+  <section class="relative overflow-hidden bg-neutral-950">
+    <img
+      src="/hero.webp"
+      alt=""
+      width={heroDims.width}
+      height={heroDims.height}
+      class="absolute inset-0 w-full h-full object-cover opacity-40"
+      fetchpriority="high"
+    />
+    <div class="relative z-10 max-w-6xl mx-auto px-4 lg:px-6 py-28 lg:py-40">
+      <h1 class="text-4xl lg:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl">
+        {config.tagline}
+      </h1>
+      <p class="text-white/70 text-base lg:text-lg max-w-2xl mb-10 leading-relaxed">
+        Pomagamy firmom w {config.address.city} przejść od pomysłu do konkretnego rezultatu - bez zbędnego żargonu i
+        bez niespodzianek w budżecie po drodze.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/kontakt" class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors">
+          Umów bezpłatną konsultację
+        </a>
+        <a href="/oferta" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors backdrop-blur">
+          Zobacz ofertę
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <StatGrid theme="light" eyebrow="W liczbach" stats={stats} />
+
+  <!-- ── OFERTA PREVIEW ───────────────────────────────────── -->
+  <section class="bg-white py-20 lg:py-28">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6">
+      <div class="flex items-end justify-between mb-10">
+        <div>
+          <p class="text-orange-600 text-sm font-semibold uppercase tracking-widest mb-2">Co robimy</p>
+          <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900">Nasza oferta</h2>
+        </div>
+        <a href="/oferta" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-900 hover:text-orange-600 transition-colors">
+          Zobacz wszystko <Icon name="lucide:arrow-up-right" class="w-4 h-4" />
+        </a>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        {
+          services.map((s) => (
+            <a href={`/oferta/${s.slug}`} class="group block border border-neutral-200 rounded-2xl p-8 hover:border-orange-300 hover:shadow-lg transition-all">
+              <h3 class="text-lg font-bold text-neutral-900 mb-2 group-hover:text-orange-600 transition-colors">{s.name}</h3>
+              <p class="text-sm text-neutral-500 leading-relaxed mb-4">{s.shortDescription}</p>
+              <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-900 group-hover:text-orange-600 transition-colors">
+                Dowiedz się więcej <Icon name="lucide:arrow-up-right" class="w-4 h-4" />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OPINIE ───────────────────────────────────────────── -->
+  <section class="bg-neutral-50 border-y border-neutral-200 py-20 lg:py-28">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6">
+      <p class="text-orange-600 text-sm font-semibold uppercase tracking-widest mb-2 text-center">Opinie</p>
+      <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900 text-center mb-12">Co mówią nasi klienci?</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        {
+          testimonials.map((t) => (
+            <div class="bg-white border border-neutral-200 rounded-2xl p-6">
+              <div class="flex gap-0.5 mb-4">
+                {Array.from({ length: 5 }).map(() => <Icon name="lucide:star" class="w-4 h-4 fill-orange-500 text-orange-500" />)}
+              </div>
+              <p class="text-sm text-neutral-600 leading-relaxed mb-4">„{t.text}"</p>
+              <p class="text-sm font-bold text-neutral-900">{t.name}</p>
+              <p class="text-xs text-neutral-500">{t.role}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ──────────────────────────────────────────────── -->
+  <section class="bg-neutral-950 py-20">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Porozmawiajmy o Twoim projekcie</h2>
+      <p class="text-neutral-400 max-w-xl mx-auto mb-8">
+        Pierwsza rozmowa nic nie kosztuje i do niczego nie zobowiązuje - to najlepszy sposób, żeby sprawdzić, czy
+        pasujemy do siebie.
+      </p>
+      <a href="/kontakt" class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors">
+        Skontaktuj się z nami
+      </a>
+    </div>
+  </section>
+</Layout>
