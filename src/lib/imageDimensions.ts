@@ -1,9 +1,12 @@
 import sharp from 'sharp';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const publicDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'public');
+// Resolved from the project root (astro build/dev always run from there) rather
+// than import.meta.url: Astro's build pipeline can execute this module from a
+// relocated chunk under dist/, which would otherwise silently point publicDir
+// at the wrong place.
+const publicDir = path.join(process.cwd(), 'public');
 const cache = new Map<string, { width: number; height: number }>();
 
 /**
