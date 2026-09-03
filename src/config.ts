@@ -25,6 +25,13 @@ type EnvConfig = {
   // Use a separate form per environment so staging test submissions don't
   // land in the same inbox as real leads.
   web3formsAccessKey: string;
+  // Cloudflare Turnstile site key (dash.cloudflare.com -> Turnstile -> Add
+  // widget) - the contact form uses it as a client-side gate only; the token
+  // is NOT forwarded to web3forms (server-side captcha verification is a
+  // web3forms PRO feature and free accounts 400 the moment `cf-turnstile-
+  // response` is in the payload). The default below is Cloudflare's public
+  // test key, which always passes - swap it for a real one per environment.
+  turnstileSiteKey: string;
   // Cloudflare Web Analytics token (dash.cloudflare.com -> Analytics -> Web
   // Analytics -> Add site) - leave empty to disable the snippet entirely, or
   // swap the <script> in Layout.astro for Plausible/GA4/whatever you use.
@@ -36,12 +43,14 @@ const envConfigs = {
     env: 'production',
     siteUrl: 'https://example.com',
     web3formsAccessKey: '',
+    turnstileSiteKey: '1x00000000000000000000AA',
     cloudflareAnalyticsToken: '',
   },
   staging: {
     env: 'staging',
     siteUrl: 'https://staging.example.com',
     web3formsAccessKey: '',
+    turnstileSiteKey: '1x00000000000000000000AA',
     cloudflareAnalyticsToken: '',
   },
 } as const satisfies Record<Env, EnvConfig>;

@@ -26,7 +26,8 @@ takim projekcie, bez konkretnych danych tamtej firmy.
   pliku przez `sharp` na buildzie i wstawia `width`/`height` na `<img>` -
   nie trzeba tego liczyć ręcznie.
 - **Formularz kontaktowy**, który realnie wysyła maila (web3forms.com, darmowe,
-  bez własnego backendu) + honeypot antyspamowy, bez CAPTCHA.
+  bez własnego backendu) + honeypot antyspamowy + Cloudflare Turnstile jako
+  bramka po stronie klienta.
 - **Analityka**: miejsce na Cloudflare Web Analytics (prywatne, bez
   cookies) - albo podmień na cokolwiek innego, nic więcej od tego nie zależy.
 - **nginx + Docker** gotowe do wdrożenia - cache dla assetów, nagłówki
@@ -66,6 +67,14 @@ bez rejestracji karty). Załóż konto, wklej swój `access key` do
 dostarczać maile. Chcesz inny provider (Formspree, własny endpoint) -
 podmień `fetch()` w `<script>` na dole `src/pages/kontakt.astro`, reszta
 (walidacja, stan sukcesu/błędu) zostaje bez zmian.
+
+**Cloudflare Turnstile** działa jako bramka po stronie klienta - blokuje
+submit, dopóki widget nie przejdzie. Token **nie jest** wysyłany do web3forms:
+serwerowa weryfikacja CAPTCHA to funkcja PRO, a darmowe konto zwraca 400
+("You are trying to use a Pro feature"), gdy tylko `cf-turnstile-response`
+pojawi się w payloadzie. Payload budowany jest z jawnej białej listy pól.
+Domyślny `config.turnstileSiteKey` to publiczny klucz testowy Cloudflare
+(zawsze przechodzi) - wygeneruj własny w dash.cloudflare.com → Turnstile.
 
 ## Komendy
 

@@ -104,6 +104,9 @@ const jsonLd = [
             <textarea id="message" name="message" rows="5" required placeholder="Napisz swoją wiadomość..." class="w-full bg-neutral-950 border border-white/10 text-white placeholder-neutral-600 px-4 py-3 rounded-lg text-sm focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors resize-none"></textarea>
           </div>
 
+          <div id="turnstile-container" data-sitekey={config.turnstileSiteKey}></div>
+          <p id="turnstile-error" class="hidden text-sm text-red-400">Potwierdź, że nie jesteś robotem.</p>
+
           <div class="flex items-start gap-3">
             <input type="checkbox" id="rodo" required class="mt-0.5 accent-orange-500" />
             <label for="rodo" class="text-xs text-neutral-500 leading-relaxed">
@@ -131,10 +134,70 @@ const jsonLd = [
   const submitBtn = document.getElementById('form-submit') as HTMLButtonElement | null;
   const successBox = document.getElementById('form-success');
   const errorBox = document.getElementById('form-error');
+  const turnstileError = document.getElementById('turnstile-error');
+
+  // Cloudflare Turnstile - loaded and rendered explicitly. The token is a
+  // client-side gate only: it is deliberately NOT sent to web3forms, whose
+  // free plan 400s ("You are trying to use a Pro feature") the moment
+  // `cf-turnstile-response` is in the payload. Server-side, the honeypot is
+  // the check that actually runs.
+  type TurnstileApi = {
+    render: (
+      el: HTMLElement,
+      opts: {
+        sitekey: string;
+        theme: string;
+        appearance: string;
+        callback: (token: string) => void;
+        'expired-callback': () => void;
+        'error-callback': () => void;
+      },
+    ) => string;
+    reset: (id: string) => void;
+  };
+  let widgetId: string | undefined;
+  let turnstileToken: string | null = null;
+
+  function setTurnstileToken(token: string | null) {
+    turnstileToken = token;
+    if (submitBtn) submitBtn.disabled = token === null;
+    if (token) turnstileError?.classList.add('hidden');
+  }
+
+  function renderTurnstile() {
+    const container = document.getElementById('turnstile-container');
+    const w = window as unknown as { turnstile?: TurnstileApi };
+    if (container && container.dataset.sitekey && w.turnstile && widgetId === undefined) {
+      widgetId = w.turnstile.render(container, {
+        sitekey: container.dataset.sitekey,
+        theme: 'dark',
+        appearance: 'always',
+        callback: setTurnstileToken,
+        'expired-callback': () => setTurnstileToken(null),
+        'error-callback': () => setTurnstileToken(null),
+      });
+    }
+  }
+
+  if (document.querySelector('script[src*="challenges.cloudflare.com/turnstile"]')) {
+    renderTurnstile();
+  } else {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    script.onload = renderTurnstile;
+    document.head.appendChild(script);
+  }
+
+  function resetTurnstile() {
+    const w = window as unknown as { turnstile?: TurnstileApi };
+    if (widgetId !== undefined) w.turnstile?.reset(widgetId);
+    setTurnstileToken(null);
+  }
 
   function setSubmitting(submitting: boolean) {
     if (!submitBtn) return;
-    submitBtn.disabled = submitting;
+    submitBtn.disabled = submitting || turnstileToken === null;
     submitBtn.textContent = submitting ? 'Wysyłanie…' : 'Wyślij wiadomość';
   }
 
@@ -143,24 +206,58 @@ const jsonLd = [
     form?.classList.toggle('hidden', show);
   }
 
+  // Gate submit on Turnstile; the widget callback re-enables it once solved.
+  if (submitBtn) submitBtn.disabled = true;
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorBox?.classList.add('hidden');
+    turnstileError?.classList.add('hidden');
+
+    const values = new FormData(form);
+
+    // Honeypot: real users never see or tick this. Bots that fill every field
+    // get a silent fake-success instead of a delivered message.
+    if ((form.elements.namedItem('botcheck') as HTMLInputElement | null)?.checked) {
+      showSuccess(true);
+      return;
+    }
+
+    if (turnstileToken === null) {
+      turnstileError?.classList.remove('hidden');
+      return;
+    }
+
     setSubmitting(true);
+
+    // Build the payload from an explicit allowlist so nothing unexpected
+    // (the honeypot, the Turnstile token, the RODO checkbox) reaches web3forms.
+    const body = new FormData();
+    body.append('access_key', String(values.get('access_key') ?? ''));
+    body.append('subject', String(values.get('subject') ?? ''));
+    body.append('name', String(values.get('name') ?? ''));
+    body.append('email', String(values.get('email') ?? ''));
+    const phone = String(values.get('phone') ?? '');
+    if (phone) body.append('phone', phone);
+    body.append('message', String(values.get('message') ?? ''));
+
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        body: new FormData(form),
+        body,
       });
       const data = await res.json();
       if (data.success) {
         showSuccess(true);
         form.reset();
+        resetTurnstile();
       } else {
         errorBox?.classList.remove('hidden');
+        resetTurnstile();
       }
     } catch {
       errorBox?.classList.remove('hidden');
+      resetTurnstile();
     } finally {
       setSubmitting(false);
     }
