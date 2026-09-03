@@ -1,7 +1,7 @@
 FROM node:26.8.1-alpine AS base
 
-# libc6-compat: sharp (used by src/lib/imageDimensions.ts at build time) ships
-# glibc-linked prebuilt binaries that need this shim on Alpine's musl.
+# libc6-compat: sharp (Astro's image service, used by astro:assets at build
+# time) ships glibc-linked prebuilt binaries that need this shim on Alpine's musl.
 RUN apk update && apk add --no-cache libc6-compat
 
 WORKDIR /app

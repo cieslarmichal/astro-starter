@@ -2,26 +2,32 @@
 import Layout from '../../layouts/Layout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 import { config } from '../../config';
 import { services } from '../../data/services';
 import { createItemListStructuredData, createBreadcrumbStructuredData } from '../../lib/structuredData';
-import { imageDimensionsFor } from '../../lib/imageDimensions';
+import { localImage, absoluteImageUrl } from '../../lib/images';
 
 const title = `Oferta — ${config.siteName}`;
 const description = `Zobacz, jak ${config.siteName} może pomóc Twojej firmie - strategia, wdrożenie i wsparcie w jednym miejscu.`;
 const canonical = `${config.siteUrl}/oferta`;
 
+const listItems = await Promise.all(
+  services.map(async (s) => ({
+    name: s.name,
+    url: `${config.siteUrl}/oferta/${s.slug}`,
+    image: s.image ? await absoluteImageUrl(s.image) : undefined,
+    description: s.shortDescription,
+  })),
+);
+
 const jsonLd = [
-  createItemListStructuredData(
-    services.map((s) => ({ name: s.name, url: `${config.siteUrl}/oferta/${s.slug}`, image: s.image, description: s.shortDescription })),
-  ),
+  createItemListStructuredData(listItems),
   createBreadcrumbStructuredData([
     { name: 'Strona główna', url: config.siteUrl },
     { name: 'Oferta', url: canonical },
   ]),
 ];
-
-const dims = await imageDimensionsFor(services.filter((s) => s.image), (s) => s.image!);
 ---
 
 <Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
@@ -35,11 +41,9 @@ const dims = await imageDimensionsFor(services.filter((s) => s.image), (s) => s.
             <a href={`/oferta/${s.slug}`} class="group block bg-neutral-950 border border-white/10 rounded-2xl overflow-hidden hover:border-orange-500/40 transition-all">
               {s.image && (
                 <div class="aspect-4/3 overflow-hidden bg-neutral-900">
-                  <img
-                    src={s.image}
+                  <Image
+                    src={localImage(s.image)}
                     alt={s.name}
-                    width={dims.get(s)?.width}
-                    height={dims.get(s)?.height}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />

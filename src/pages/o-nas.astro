@@ -1,9 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
+import { Image } from 'astro:assets';
 import { config } from '../config';
 import { createBreadcrumbStructuredData } from '../lib/structuredData';
-import { imageDimensionsFor } from '../lib/imageDimensions';
+import { localImage } from '../lib/images';
 
 const title = `O nas — ${config.siteName}`;
 const description = `Poznaj zespół ${config.siteName} - kim jesteśmy i dlaczego klienci nam ufają.`;
@@ -17,11 +18,10 @@ const jsonLd = [
 ];
 
 const team = [
-  { name: 'Jan Kowalski', role: 'Współzałożyciel', image: '/team-1.webp' },
-  { name: 'Maria Zielińska', role: 'Head of Delivery', image: '/team-2.webp' },
-  { name: 'Piotr Wójcik', role: 'Lead Consultant', image: '/team-3.webp' },
+  { name: 'Jan Kowalski', role: 'Współzałożyciel', image: localImage('/team-1.webp') },
+  { name: 'Maria Zielińska', role: 'Head of Delivery', image: localImage('/team-2.webp') },
+  { name: 'Piotr Wójcik', role: 'Lead Consultant', image: localImage('/team-3.webp') },
 ];
-const dims = await imageDimensionsFor(team, (m) => m.image);
 ---
 
 <Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
@@ -47,7 +47,7 @@ const dims = await imageDimensionsFor(team, (m) => m.image);
           </p>
         </div>
         <div class="overflow-hidden rounded-2xl border border-white/10">
-          <img src="/about-1.webp" alt="Zespół przy pracy" width="1600" height="1067" class="w-full h-auto object-cover" loading="lazy" />
+          <Image src={localImage('/about-1.webp')} alt="Zespół przy pracy" class="w-full h-auto object-cover" loading="lazy" />
         </div>
       </div>
 
@@ -59,14 +59,7 @@ const dims = await imageDimensionsFor(team, (m) => m.image);
             team.map((member) => (
               <div>
                 <div class="aspect-4/5 overflow-hidden rounded-2xl mb-4 bg-neutral-900 border border-white/10">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    width={dims.get(member)?.width}
-                    height={dims.get(member)?.height}
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                  <Image src={member.image} alt={member.name} class="w-full h-full object-cover" loading="lazy" />
                 </div>
                 <p class="font-bold text-white">{member.name}</p>
                 <p class="text-sm text-neutral-500">{member.role}</p>

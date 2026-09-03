@@ -1,4 +1,5 @@
 import { config } from '../config';
+import { absoluteImageUrl } from './images';
 
 /**
  * Schema.org JSON-LD helpers. Pass the return values (as an array) to
@@ -6,13 +7,17 @@ import { config } from '../config';
  * `{'@context':'https://schema.org','@graph':[...]}` block per page.
  */
 
+// Resolved once at module load (top-level await) - reused wherever a
+// structured-data block needs a logo/default image.
+const logoUrl = await absoluteImageUrl('/og-image.webp');
+
 export function createOrganizationStructuredData() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: config.siteName,
     url: config.siteUrl,
-    logo: `${config.siteUrl}/og-image.webp`,
+    logo: logoUrl,
     description: config.tagline,
     sameAs: Object.values(config.social).filter(Boolean),
   };
@@ -94,14 +99,20 @@ export function createBreadcrumbStructuredData(items: Array<{ name: string; url:
 }
 
 /** For an offer/service detail page. */
-export function createServiceStructuredData(params: { name: string; description: string; url: string; image?: string }) {
+export function createServiceStructuredData(params: {
+  name: string;
+  description: string;
+  url: string;
+  /** Absolute URL - resolve with absoluteImageUrl() from lib/images before calling. */
+  image?: string;
+}) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name: params.name,
     description: params.description,
     url: params.url,
-    ...(params.image && { image: `${config.siteUrl}${params.image}` }),
+    ...(params.image && { image: params.image }),
     provider: {
       '@type': 'Organization',
       name: config.siteName,
@@ -113,6 +124,7 @@ export function createServiceStructuredData(params: { name: string; description:
 
 /** For a list page (e.g. the offer/services index). */
 export function createItemListStructuredData(
+  /** image, when present, must be an absolute URL - resolve with absoluteImageUrl() first. */
   items: Array<{ name: string; url: string; image?: string; description?: string }>,
 ) {
   return {
@@ -123,7 +135,7 @@ export function createItemListStructuredData(
       position: index + 1,
       name: item.name,
       url: item.url,
-      ...(item.image && { image: `${config.siteUrl}${item.image}` }),
+      ...(item.image && { image: item.image }),
       ...(item.description && { description: item.description }),
     })),
   };

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import StatGrid, { type Stat } from '../components/StatGrid.astro';
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 import { config } from '../config';
 import { services } from '../data/services';
 import { testimonials } from '../data/testimonials';
@@ -11,7 +12,7 @@ import {
   createWebPageStructuredData,
   createLocalBusinessStructuredData,
 } from '../lib/structuredData';
-import { imageDimensions } from '../lib/imageDimensions';
+import { localImage } from '../lib/images';
 
 const title = `${config.siteName} — ${config.tagline}`;
 const description = `${config.siteName} to zespół, który pomaga firmom w ${config.address.city} zrealizować to, co dla nich najważniejsze. Poznaj naszą ofertę.`;
@@ -23,7 +24,7 @@ const jsonLd = [
   createWebSiteStructuredData(),
 ];
 
-const heroDims = await imageDimensions('/hero.webp');
+const hero = localImage('/hero.webp');
 
 const stats: Stat[] = [
   { value: '120+', label: 'Zrealizowanych projektów', desc: 'dla klientów różnej wielkości' },
@@ -35,14 +36,7 @@ const stats: Stat[] = [
 <Layout title={title} description={description} canonical={`${config.siteUrl}/`} jsonLd={jsonLd}>
   <!-- ── HERO ─────────────────────────────────────────────── -->
   <section class="relative overflow-hidden bg-black">
-    <img
-      src="/hero.webp"
-      alt=""
-      width={heroDims.width}
-      height={heroDims.height}
-      class="absolute inset-0 w-full h-full object-cover opacity-30"
-      fetchpriority="high"
-    />
+    <Image src={hero} alt="" class="absolute inset-0 w-full h-full object-cover opacity-30" fetchpriority="high" />
     <div class="pointer-events-none absolute -top-52 -right-40 w-[600px] h-[600px] rounded-full bg-orange-600/15 blur-3xl"></div>
     <div class="absolute inset-0 bg-linear-to-t from-black via-black/60 to-black/20"></div>
     <div class="relative z-10 max-w-6xl mx-auto px-4 lg:px-6 py-28 lg:py-40">
