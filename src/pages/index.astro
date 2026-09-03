@@ -34,55 +34,58 @@ const stats: Stat[] = [
 
 <Layout title={title} description={description} canonical={`${config.siteUrl}/`} jsonLd={jsonLd}>
   <!-- ── HERO ─────────────────────────────────────────────── -->
-  <section class="relative overflow-hidden bg-neutral-950">
+  <section class="relative overflow-hidden bg-black">
     <img
       src="/hero.webp"
       alt=""
       width={heroDims.width}
       height={heroDims.height}
-      class="absolute inset-0 w-full h-full object-cover opacity-40"
+      class="absolute inset-0 w-full h-full object-cover opacity-30"
       fetchpriority="high"
     />
+    <div class="pointer-events-none absolute -top-52 -right-40 w-[600px] h-[600px] rounded-full bg-orange-600/15 blur-3xl"></div>
+    <div class="absolute inset-0 bg-linear-to-t from-black via-black/60 to-black/20"></div>
     <div class="relative z-10 max-w-6xl mx-auto px-4 lg:px-6 py-28 lg:py-40">
+      <p class="text-orange-400 text-sm font-semibold uppercase tracking-widest mb-5">{config.siteName}</p>
       <h1 class="text-4xl lg:text-6xl font-bold text-white tracking-tight mb-6 max-w-3xl">
         {config.tagline}
       </h1>
-      <p class="text-white/70 text-base lg:text-lg max-w-2xl mb-10 leading-relaxed">
+      <p class="text-neutral-400 text-base lg:text-lg max-w-2xl mb-10 leading-relaxed">
         Pomagamy firmom w {config.address.city} przejść od pomysłu do konkretnego rezultatu - bez zbędnego żargonu i
         bez niespodzianek w budżecie po drodze.
       </p>
       <div class="flex flex-wrap gap-4">
-        <a href="/kontakt" class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors">
+        <a href="/kontakt" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-black font-bold px-8 py-3.5 rounded-lg transition-colors">
           Umów bezpłatną konsultację
         </a>
-        <a href="/oferta" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors backdrop-blur">
+        <a href="/oferta" class="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors backdrop-blur">
           Zobacz ofertę
         </a>
       </div>
     </div>
   </section>
 
-  <StatGrid theme="light" eyebrow="W liczbach" stats={stats} />
+  <StatGrid eyebrow="W liczbach" stats={stats} />
 
   <!-- ── OFERTA PREVIEW ───────────────────────────────────── -->
-  <section class="bg-white py-20 lg:py-28">
+  <section class="bg-black py-20 lg:py-28">
     <div class="max-w-6xl mx-auto px-4 lg:px-6">
       <div class="flex items-end justify-between mb-10">
         <div>
-          <p class="text-orange-600 text-sm font-semibold uppercase tracking-widest mb-2">Co robimy</p>
-          <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900">Nasza oferta</h2>
+          <p class="text-orange-400 text-sm font-semibold uppercase tracking-widest mb-2">Co robimy</p>
+          <h2 class="text-3xl sm:text-4xl font-bold text-white">Nasza oferta</h2>
         </div>
-        <a href="/oferta" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-900 hover:text-orange-600 transition-colors">
+        <a href="/oferta" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-orange-400 transition-colors">
           Zobacz wszystko <Icon name="lucide:arrow-up-right" class="w-4 h-4" />
         </a>
       </div>
       <div class="grid md:grid-cols-3 gap-6">
         {
           services.map((s) => (
-            <a href={`/oferta/${s.slug}`} class="group block border border-neutral-200 rounded-2xl p-8 hover:border-orange-300 hover:shadow-lg transition-all">
-              <h3 class="text-lg font-bold text-neutral-900 mb-2 group-hover:text-orange-600 transition-colors">{s.name}</h3>
-              <p class="text-sm text-neutral-500 leading-relaxed mb-4">{s.shortDescription}</p>
-              <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-900 group-hover:text-orange-600 transition-colors">
+            <a href={`/oferta/${s.slug}`} class="group block bg-neutral-950 border border-white/10 rounded-2xl p-8 hover:border-orange-500/40 hover:bg-neutral-900 transition-all">
+              <h3 class="text-lg font-bold text-white mb-2 group-hover:text-orange-400 transition-colors">{s.name}</h3>
+              <p class="text-sm text-neutral-400 leading-relaxed mb-4">{s.shortDescription}</p>
+              <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-400">
                 Dowiedz się więcej <Icon name="lucide:arrow-up-right" class="w-4 h-4" />
               </span>
             </a>
@@ -93,19 +96,19 @@ const stats: Stat[] = [
   </section>
 
   <!-- ── OPINIE ───────────────────────────────────────────── -->
-  <section class="bg-neutral-50 border-y border-neutral-200 py-20 lg:py-28">
+  <section class="bg-neutral-950 border-y border-white/10 py-20 lg:py-28">
     <div class="max-w-6xl mx-auto px-4 lg:px-6">
-      <p class="text-orange-600 text-sm font-semibold uppercase tracking-widest mb-2 text-center">Opinie</p>
-      <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900 text-center mb-12">Co mówią nasi klienci?</h2>
+      <p class="text-orange-400 text-sm font-semibold uppercase tracking-widest mb-2 text-center">Opinie</p>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-12">Co mówią nasi klienci?</h2>
       <div class="grid md:grid-cols-3 gap-6">
         {
           testimonials.map((t) => (
-            <div class="bg-white border border-neutral-200 rounded-2xl p-6">
+            <div class="bg-black border border-white/10 rounded-2xl p-6">
               <div class="flex gap-0.5 mb-4">
-                {Array.from({ length: 5 }).map(() => <Icon name="lucide:star" class="w-4 h-4 fill-orange-500 text-orange-500" />)}
+                {Array.from({ length: 5 }).map(() => <Icon name="lucide:star" class="w-4 h-4 fill-orange-400 text-orange-400" />)}
               </div>
-              <p class="text-sm text-neutral-600 leading-relaxed mb-4">„{t.text}"</p>
-              <p class="text-sm font-bold text-neutral-900">{t.name}</p>
+              <p class="text-sm text-neutral-300 leading-relaxed mb-4">„{t.text}"</p>
+              <p class="text-sm font-bold text-white">{t.name}</p>
               <p class="text-xs text-neutral-500">{t.role}</p>
             </div>
           ))
@@ -115,14 +118,15 @@ const stats: Stat[] = [
   </section>
 
   <!-- ── CTA ──────────────────────────────────────────────── -->
-  <section class="bg-neutral-950 py-20">
-    <div class="max-w-6xl mx-auto px-4 lg:px-6 text-center">
+  <section class="relative overflow-hidden bg-black py-20">
+    <div class="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full bg-orange-600/10 blur-3xl"></div>
+    <div class="relative max-w-6xl mx-auto px-4 lg:px-6 text-center">
       <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Porozmawiajmy o Twoim projekcie</h2>
       <p class="text-neutral-400 max-w-xl mx-auto mb-8">
         Pierwsza rozmowa nic nie kosztuje i do niczego nie zobowiązuje - to najlepszy sposób, żeby sprawdzić, czy
         pasujemy do siebie.
       </p>
-      <a href="/kontakt" class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3.5 rounded-lg transition-colors">
+      <a href="/kontakt" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-black font-bold px-8 py-3.5 rounded-lg transition-colors">
         Skontaktuj się z nami
       </a>
     </div>

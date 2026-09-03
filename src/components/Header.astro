@@ -12,10 +12,10 @@ const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href + '/');
 ---
 
-<header class="sticky top-0 z-50 bg-white border-b border-neutral-200">
+<header class="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/10">
   <div class="max-w-6xl mx-auto px-4 lg:px-6">
     <div class="flex items-center h-18 lg:h-20">
-      <a href="/" class="shrink-0 font-bold text-xl tracking-tight text-neutral-900">
+      <a href="/" class="shrink-0 font-bold text-xl tracking-tight text-white">
         {config.siteName}
       </a>
 
@@ -26,7 +26,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
               href={item.href}
               class:list={[
                 'inline-flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors',
-                isActive(item.href) ? 'text-orange-600 font-semibold' : 'text-neutral-600 hover:text-neutral-900',
+                isActive(item.href) ? 'text-orange-400 font-semibold' : 'text-neutral-400 hover:text-white',
               ]}
             >
               {item.name}
@@ -37,7 +37,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
 
       <a
         href="/kontakt"
-        class="hidden lg:inline-flex shrink-0 items-center gap-1.5 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold px-6 py-2.5 rounded-lg transition-colors whitespace-nowrap ml-auto"
+        class="hidden lg:inline-flex shrink-0 items-center gap-1.5 bg-orange-500 hover:bg-orange-400 text-black text-sm font-bold px-6 py-2.5 rounded-lg transition-colors whitespace-nowrap ml-auto"
       >
         Umów rozmowę
       </a>
@@ -45,7 +45,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
       <button
         id="mobile-menu-toggle"
         type="button"
-        class="lg:hidden ml-auto p-2 text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors"
+        class="lg:hidden ml-auto p-2 text-neutral-300 hover:bg-white/10 rounded-lg transition-colors"
         aria-label="Otwórz menu"
         aria-expanded="false"
       >
@@ -60,18 +60,18 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     id="mobile-drawer-overlay"
     class="lg:hidden fixed inset-0 z-40 opacity-0 pointer-events-none transition-opacity duration-300"
   >
-    <div id="mobile-drawer-backdrop" class="absolute inset-0 bg-black/40"></div>
+    <div id="mobile-drawer-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
     <div
       id="mobile-drawer-panel"
-      class="absolute top-0 right-0 h-full w-72 bg-white border-l border-neutral-200 shadow-2xl flex flex-col translate-x-full transition-transform duration-300 ease-in-out"
+      class="absolute top-0 right-0 h-full w-72 bg-neutral-950 border-l border-white/10 shadow-2xl flex flex-col translate-x-full transition-transform duration-300 ease-in-out"
     >
-      <div class="flex items-center justify-between px-4 h-18 border-b border-neutral-200 shrink-0">
-        <a href="/" class="font-bold text-lg text-neutral-900">{config.siteName}</a>
+      <div class="flex items-center justify-between px-4 h-18 border-b border-white/10 shrink-0">
+        <a href="/" class="font-bold text-lg text-white">{config.siteName}</a>
         <button
           id="mobile-drawer-close"
           type="button"
-          class="p-2 text-neutral-500 hover:bg-neutral-100 rounded-lg transition-colors"
+          class="p-2 text-neutral-400 hover:bg-white/10 rounded-lg transition-colors"
           aria-label="Zamknij menu"
         >
           <Icon name="lucide:x" class="w-5 h-5" />
@@ -85,7 +85,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
               href={item.href}
               class:list={[
                 'flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                isActive(item.href) ? 'text-orange-600 bg-orange-50 font-semibold' : 'text-neutral-700 hover:bg-neutral-100',
+                isActive(item.href) ? 'text-orange-400 bg-orange-500/10 font-semibold' : 'text-neutral-300 hover:bg-white/5',
               ]}
             >
               {item.name}
@@ -94,10 +94,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
         }
       </nav>
 
-      <div class="shrink-0 px-3 pb-5 border-t border-neutral-200 pt-3">
+      <div class="shrink-0 px-3 pb-5 border-t border-white/10 pt-3">
         <a
           href="/kontakt"
-          class="flex items-center justify-center bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors"
+          class="flex items-center justify-center bg-orange-500 hover:bg-orange-400 text-black text-sm font-bold px-4 py-3 rounded-lg transition-colors"
         >
           Umów rozmowę
         </a>

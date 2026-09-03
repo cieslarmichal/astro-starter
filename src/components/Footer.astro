@@ -25,7 +25,7 @@ const socials: SocialLink[] = (
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-neutral-950 text-white">
+<footer class="bg-black text-white border-t border-white/10">
   <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
       <div class="md:col-span-2 lg:col-span-1 lg:pr-6">
@@ -40,9 +40,9 @@ const currentYear = new Date().getFullYear();
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  class="w-9 h-9 rounded-full bg-neutral-800 hover:bg-orange-600 flex items-center justify-center transition-colors"
+                  class="group w-9 h-9 rounded-full bg-white/10 hover:bg-orange-500 flex items-center justify-center transition-colors"
                 >
-                  <Icon name={icon} class="w-3.5 h-3.5 text-white" />
+                  <Icon name={icon} class="w-3.5 h-3.5 text-white group-hover:text-black transition-colors" />
                 </a>
               ))}
             </div>
@@ -92,7 +92,7 @@ const currentYear = new Date().getFullYear();
     </div>
   </div>
 
-  <div class="border-t border-neutral-800">
+  <div class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-4 lg:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
       <p class="text-xs text-neutral-500">© {currentYear} {config.legalName}. Wszelkie prawa zastrzeżone.</p>
     </div>

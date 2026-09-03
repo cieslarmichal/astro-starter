@@ -3,7 +3,7 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: white;
+  background-color: black;
 }
 
 h1,
@@ -11,6 +11,7 @@ h2,
 h3,
 h4 {
   font-family: 'Manrope', sans-serif;
+  letter-spacing: -0.01em;
 }
 
 * {
@@ -18,15 +19,10 @@ h4 {
 }
 
 :root {
-  /* Brand color - change this (and --accent below) to your own. Every
-     `text-orange-*`/`bg-orange-*` class in the templates maps to Tailwind's
-     built-in orange scale, not this token - swap those class names for
-     another Tailwind color (or define a custom palette in @theme) if you'd
-     rather not use orange at all. */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --border: oklch(0.9 0 0);
+  --background: oklch(0.09 0 0);
+  --foreground: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --border: oklch(0.24 0 0);
 }
 
 @theme {
@@ -34,6 +30,26 @@ h4 {
   --color-foreground: var(--foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+
+  /*
+   * Premium gold accent, mapped onto Tailwind's `orange-*` scale - every
+   * `text-orange-*`/`bg-orange-*`/`border-orange-*` class across the
+   * templates renders this instead of stock Tailwind orange, with zero
+   * class-name changes needed anywhere else. To use a different accent
+   * entirely, replace this block (or delete it to fall back to Tailwind's
+   * default orange).
+   */
+  --color-orange-50: oklch(0.98 0.015 85);
+  --color-orange-100: oklch(0.95 0.03 85);
+  --color-orange-200: oklch(0.9 0.055 84);
+  --color-orange-300: oklch(0.83 0.085 83);
+  --color-orange-400: oklch(0.76 0.11 81);
+  --color-orange-500: oklch(0.71 0.13 79);
+  --color-orange-600: oklch(0.66 0.135 76);
+  --color-orange-700: oklch(0.57 0.125 74);
+  --color-orange-800: oklch(0.47 0.105 72);
+  --color-orange-900: oklch(0.37 0.085 70);
+  --color-orange-950: oklch(0.24 0.055 68);
 }
 
 @keyframes marquee {
@@ -51,6 +67,11 @@ h4 {
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+
+  ::selection {
+    background-color: var(--color-orange-600);
+    color: black;
   }
 
   .scrollbar-hide::-webkit-scrollbar {
