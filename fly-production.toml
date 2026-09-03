@@ -1,0 +1,36 @@
+# fly.toml app configuration file for the production deploy.
+#
+# Rename the app (and fly-staging.toml's app) to match your project, then
+# `fly apps create <name>` / `<name>-staging` before the first deploy.
+# See https://fly.io/docs/reference/configuration/ for all options.
+
+app = 'astro-starter-production'
+primary_region = 'fra'
+
+[build]
+  dockerfile = './Dockerfile'
+  build-target = 'static'
+
+  [build.args]
+    BUILD_ENV = 'production'
+
+[deploy]
+  strategy = 'rolling'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'off'
+  auto_start_machines = false
+  min_machines_running = 1
+  processes = ['app']
+
+  [http_service.concurrency]
+    type = 'requests'
+    hard_limit = 2000
+    soft_limit = 1000
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 256

@@ -10,26 +10,34 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.3.1",
-    "astro-icon": "^1.2.0",
-    "@astrojs/sitemap": "^3.7.4",
-    "@iconify-json/lucide": "^1.2.129",
-    "@iconify-json/simple-icons": "^1.2.94",
-    "tailwindcss": "^4.3.3"
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.1",
+    "astro-icon": "1.2.0",
+    "@astrojs/sitemap": "3.7.4",
+    "@iconify-json/lucide": "1.2.129",
+    "@iconify-json/simple-icons": "1.2.94",
+    "tailwindcss": "4.3.3"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
+    "@astrojs/check": "0.9.10",
     "@eslint/js": "10.0.1",
     "@types/node": "26.4.1",
     "eslint": "10.9.1",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-astro": "3.1.0",
     "globals": "17.12.0",
     "prettier": "3.9.6",
-    "prettier-plugin-astro": "^0.14.1",
-    "sharp": "^0.35.4",
+    "prettier-plugin-astro": "0.14.1",
+    "sharp": "0.35.4",
     "typescript": "6.0.3",
     "typescript-eslint": "8.69.0"
+  },
+  "volta": {
+    "node": "26.8.1",
+    "npm": "12.0.1"
+  },
+  "engines": {
+    "node": ">=26",
+    "npm": ">=12"
   }
 }

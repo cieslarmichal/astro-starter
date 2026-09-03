@@ -12,3 +12,5 @@ Thumbs.db
 Dockerfile
 .dockerignore
 .git
+.github
+fly-*.toml

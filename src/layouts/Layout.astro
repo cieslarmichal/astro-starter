@@ -34,9 +34,14 @@ const {
   jsonLd,
 } = Astro.props;
 
+// Staging is noindex/nofollow across the board so it never competes with
+// production in search results (robots.txt also Disallows it) - the per-page
+// `noindex`/`nofollow` props only matter on production.
 const robotsContent =
-  [noindex && 'noindex', nofollow && 'nofollow'].filter(Boolean).join(', ') ||
-  'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+  config.env !== 'production'
+    ? 'noindex, nofollow'
+    : [noindex && 'noindex', nofollow && 'nofollow'].filter(Boolean).join(', ') ||
+      'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---
 
 <!doctype html>

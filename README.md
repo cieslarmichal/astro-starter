@@ -41,6 +41,9 @@ takim projekcie, bez konkretnych danych tamtej firmy.
 1. `npm install`
 2. **`src/config.ts`** - nazwa firmy, adres, kontakt, social media, klucze do
    formularza/analityki. Jedno miejsce, z którego czyta cała reszta strony.
+   Rzeczy zależne od środowiska (`siteUrl`, klucz web3forms, token analityki)
+   są w `envConfigs` - osobno dla `staging` i `production` (patrz
+   [Deployment](#deployment)).
 3. **`astro.config.mjs`** - `site` czyta się z `config.ts`, więc wystarczy
    zmienić to raz.
 4. Podmień placeholdery w `public/*.webp` (wygenerowane jako kolorowe
@@ -79,3 +82,43 @@ podmień `fetch()` w `<script>` na dole `src/pages/kontakt.astro`, reszta
 działa na dowolnym hoście uruchamiającym kontenery (Fly.io, Railway,
 DigitalOcean App Platform, VPS z Dockerem...). Bez zmian w kodzie aplikacji,
 tylko podmień domenę w `nginx/nginx.conf`.
+
+### Dwa środowiska: staging i production
+
+Aktywne środowisko wybiera build-arg `BUILD_ENV` (Docker `ARG` → `ENV` →
+`process.env.BUILD_ENV` w `src/config.ts`). Tylko `BUILD_ENV=production`
+wybiera production - wszystko inne (lokalny `npm run build`, CI, staging) to
+staging, więc production jest opt-in i nie da się w nie trafić przypadkiem.
+Per-środowiskowe wartości (`siteUrl`, klucz web3forms, token analityki)
+siedzą w `envConfigs` w `src/config.ts`; reszta configu jest wspólna.
+
+Staging jest w całości `noindex, nofollow` (meta w `Layout.astro`) i ma
+`robots.txt` z `Disallow: /` bez linii `Sitemap:` - żeby
+`staging.example.com` nigdy nie konkurował w wynikach z produkcją.
+
+### Fly.io
+
+Dwa osobne configi, jeden Dockerfile:
+
+| Plik | App | `BUILD_ENV` |
+| --- | --- | --- |
+| `fly-staging.toml` | `astro-starter-staging` | `staging` |
+| `fly-production.toml` | `astro-starter` | `production` |
+
+Pierwszy setup:
+
+1. Podmień `app = '...'` w obu `fly-*.toml` na nazwy swoich aplikacji.
+2. `fly apps create <nazwa>` i `fly apps create <nazwa>-staging`.
+3. `fly tokens create deploy` → wrzuć jako sekret repo `FLY_TOKEN`
+   (Settings → Secrets and variables → Actions).
+4. Ręczny deploy: `flyctl deploy -c fly-staging.toml` /
+   `flyctl deploy -c fly-production.toml`.
+
+### GitHub Actions
+
+- **`.github/workflows/cicd.yml`** - na każdy PR i push do `main`: build +
+  lint. Na push do `main` dodatkowo automatyczny deploy na **staging**.
+- **`.github/workflows/deploy-production.yml`** - deploy na **production**
+  wyłącznie ręcznie (Actions → Deploy to Production → Run workflow).
+
+Oba wymagają sekretu `FLY_TOKEN`.
